@@ -15,8 +15,10 @@ class Ruhoh
       
       self.constants.each {|c|
         task = self.const_get(c)
+        print c, "\n"
         next unless task.respond_to?(:run)
         task.run(target, page)
+
       }  
       true
     end
@@ -33,6 +35,8 @@ class Ruhoh
           Ruhoh::DB.all_pages.each_value do |p|
             page.change(p['id'])
 
+            print p['id'], "---", page.compiled_path, "\n"
+
             FileUtils.mkdir_p File.dirname(page.compiled_path)
             File.open(page.compiled_path, 'w:UTF-8') { |p| p.puts page.render }
 
@@ -43,9 +47,17 @@ class Ruhoh
       
       def self.media(target, page)
         return unless FileTest.directory? Ruhoh.paths.media
-        media = Ruhoh::Utils.url_to_path(Ruhoh.urls.media, target)
+       media = Ruhoh::Utils.url_to_path(Ruhoh.urls.media, target)
         FileUtils.mkdir_p media
         FileUtils.cp_r File.join(Ruhoh.paths.media, '.'), media
+
+        print "length of media hash=", Ruhoh::DB.media.length, "\n"
+        
+        Ruhoh::DB.media.each do |k, v|
+            print k, "----", v, "\n"
+            FileUtils.mkdir_p File.dirname(File.join(target, v))
+            FileUtils.cp File.join(Ruhoh.paths.base, k), File.join(target, v)
+        end
       end
       
     end #Defaults

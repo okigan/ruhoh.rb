@@ -13,14 +13,18 @@ class Ruhoh
     end
 
     def call(env)
-      return favicon if env['PATH_INFO'] == '/favicon.ico'
-      return admin if [Ruhoh.urls.dashboard, "#{Ruhoh.urls.dashboard}/"].include?(env['PATH_INFO'])
-      
-      id = Ruhoh::DB.routes[env['PATH_INFO']]
-      raise "Page id not found for url: #{env['PATH_INFO']}" unless id
-      @page.change(id)
+      #return favicon if env['PATH_INFO'] == '/favicon.ico'
+      $return admin if [Ruhoh.urls.dashboard, "#{Ruhoh.urls.dashboard}/"].include?(env['PATH_INFO'])
 
-      [200, {'Content-Type' => 'text/html'}, [@page.render]]
+      #print Ruhoh::DB.routes, "\n"
+      
+      #id = Ruhoh::DB.routes[env['PATH_INFO']]
+      #raise "Page id not found for url: #{env['PATH_INFO']}" unless id
+      #@page.change(id)
+
+      #[200, {'Content-Type' => 'text/html'}, [@page.render]]
+
+      [200, {'Content-Type' => 'text/html'}, File.read(env['PATH_INFO'])]
     end
     
     def favicon

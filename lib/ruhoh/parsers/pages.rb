@@ -41,6 +41,7 @@ class Ruhoh
       def self.is_valid_page?(filepath)
         return false if FileTest.directory?(filepath)
         return false if ['.'].include? filepath[0]
+        print filepath, "\n"
         Ruhoh.config.pages_exclude.each {|regex| return false if filepath =~ regex }
         true
       end

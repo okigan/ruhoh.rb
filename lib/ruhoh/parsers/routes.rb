@@ -12,6 +12,11 @@ class Ruhoh
           routes[page['url']] = page['id'] 
         }
         
+        Ruhoh::DB.media.each { |k, v|
+          routes[k] = v
+          print k, v, "\n"
+        }
+        
         routes
       end
     
